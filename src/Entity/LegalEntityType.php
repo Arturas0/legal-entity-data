@@ -8,13 +8,14 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Repository\LegalEntityTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LegalEntityTypeRepository::class)]
 #[ApiResource(
     operations: [
         new Get(),
@@ -36,7 +37,15 @@ class LegalEntityType
 
     #[ORM\Column(length: 255), Groups(['read'])]
     #[Assert\NotBlank]
-    private ?string $name = null;
+    private ?string $short_name = null;
+
+    #[ORM\Column(length: 255), Groups(['read'])]
+    #[Assert\NotBlank]
+    private ?string $long_name = null;
+
+    #[ORM\Column(length: 20), Groups(['read'])]
+    #[Assert\NotBlank]
+    private ?string $type = null;
 
     public function getId(): ?Uuid
     {
@@ -55,14 +64,38 @@ class LegalEntityType
         return $this;
     }
 
-    public function getName(): ?string
+    public function getShortName(): ?string
     {
-        return $this->name;
+        return $this->short_name;
     }
 
-    public function setName(string $name): static
+    public function setShortName(string $short_name): static
     {
-        $this->name = $name;
+        $this->short_name = $short_name;
+
+        return $this;
+    }
+
+    public function getLongName(): ?string
+    {
+        return $this->long_name;
+    }
+
+    public function setLongName(string $long_name): static
+    {
+        $this->long_name = $long_name;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
