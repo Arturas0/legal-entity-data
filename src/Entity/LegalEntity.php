@@ -57,6 +57,9 @@ class LegalEntity
     #[ORM\Column(length: 255), Groups(['read'])]
     private ?string $status_code = null;
 
+    #[ORM\ManyToOne(targetEntity: 'LegalStatus'), Groups(['read'])]
+    private ?LegalStatus $legalStatus = null;
+
     public function getCode(): ?string
     {
         return $this->code;
@@ -130,5 +133,15 @@ class LegalEntity
     public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function getLegalStatus(): ?LegalStatus
+    {
+        return $this->legalStatus;
+    }
+
+    public function setLegalStatus(?LegalStatus $legalStatus): void
+    {
+        $this->legalStatus = $legalStatus;
     }
 }
