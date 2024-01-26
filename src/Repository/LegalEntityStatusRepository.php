@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\LegalStatus;
+use App\Entity\LegalEntityStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<LegalStatus>
+ * @extends ServiceEntityRepository<LegalEntityStatus>
  *
- * @method LegalStatus|null find($id, $lockMode = null, $lockVersion = null)
- * @method LegalStatus|null findOneBy(array $criteria, array $orderBy = null)
- * @method LegalStatus[]    findAll()
- * @method LegalStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method LegalEntityStatus|null find($id, $lockMode = null, $lockVersion = null)
+ * @method LegalEntityStatus|null findOneBy(array $criteria, array $orderBy = null)
+ * @method LegalEntityStatus[]    findAll()
+ * @method LegalEntityStatus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class LegalStatusRepository extends ServiceEntityRepository
+class LegalEntityStatusRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, LegalStatus::class);
+        parent::__construct($registry, LegalEntityStatus::class);
     }
 
 //    /**
-//     * @return LegalStatus[] Returns an array of LegalStatus objects
+//     * @return LegalEntityStatus[] Returns an array of LegalEntityStatus objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class LegalStatusRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?LegalStatus
+//    public function findOneBySomeField($value): ?LegalEntityStatus
 //    {
 //        return $this->createQueryBuilder('l')
 //            ->andWhere('l.exampleField = :val')

@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\LegalEntityRepository;
 use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LegalEntityRepository::class)]
 #[ApiResource(
@@ -25,7 +27,7 @@ use Symfony\Component\Uid\Uuid;
         new GetCollection(uriTemplate: '/legal-entities'),
         new Post(),
     ],
-    normalizationContext: ['groups' => ['read']]
+    normalizationContext: ['groups' => ['read']],
 )]
 class LegalEntity
 {
@@ -33,32 +35,34 @@ class LegalEntity
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id;
+    private Uuid $id;
 
-    #[ORM\Column(type: Types::BIGINT), Groups(['read'])]
+    #[ORM\Column(length: 255), Groups(['read'])]
+    #[Assert\NotBlank]
+    #[ApiProperty(
+        openapiContext: [
+            'example' => '300020079'
+        ]
+    )]
     private ?string $code = null;
 
     #[ORM\Column(length: 255), Groups(['read'])]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(length: 255), Groups(['read'])]
+    #[Assert\NotBlank]
     private ?string $display_address = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['read'])]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    #[Assert\NotNull]
     public ?\DateTimeImmutable $registeredAt = null;
 
-    #[ORM\Column, Groups(['read'])]
-    private ?int $type_code = null;
-
-    #[ORM\Column(length: 255), Groups(['read'])]
-    private ?string $type_name = null;
-
-    #[ORM\Column(length: 255), Groups(['read'])]
-    private ?string $status_code = null;
-
-    #[ORM\ManyToOne(targetEntity: 'LegalStatus'), Groups(['read'])]
-    private ?LegalStatus $legalStatus = null;
+    #[ORM\ManyToOne(targetEntity: 'LegalEntityType'), Groups(['read'])]
+    private ?LegalEntityType $legalEntityType = null;
+    #[ORM\ManyToOne(targetEntity: 'LegalEntityStatus'), Groups(['read'])]
+    private ?LegalEntityStatus $legalEntityStatus = null;
 
     public function getCode(): ?string
     {
@@ -100,48 +104,28 @@ class LegalEntity
         $this->registeredAt = $registeredAt;
     }
 
-    public function getTypeCode(): ?int
-    {
-        return $this->type_code;
-    }
-
-    public function setTypeCode(?int $type_code): void
-    {
-        $this->type_code = $type_code;
-    }
-
-    public function getTypeName(): ?string
-    {
-        return $this->type_name;
-    }
-
-    public function setTypeName(?string $type_name): void
-    {
-        $this->type_name = $type_name;
-    }
-
-    public function getStatusCode(): ?string
-    {
-        return $this->status_code;
-    }
-
-    public function setStatusCode(?string $status_code): void
-    {
-        $this->status_code = $status_code;
-    }
-
-    public function getId(): ?Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function getLegalStatus(): ?LegalStatus
+    public function getLegalEntityStatus(): ?LegalEntityStatus
     {
-        return $this->legalStatus;
+        return $this->legalEntityStatus;
     }
 
-    public function setLegalStatus(?LegalStatus $legalStatus): void
+    public function setLegalEntityStatus(?LegalEntityStatus $legalEntityStatus): void
     {
-        $this->legalStatus = $legalStatus;
+        $this->legalEntityStatus = $legalEntityStatus;
+    }
+
+    public function getLegalEntityType(): ?LegalEntityType
+    {
+        return $this->legalEntityType;
+    }
+
+    public function setLegalEntityType(?LegalEntityType $legalEntityType): void
+    {
+        $this->legalEntityType = $legalEntityType;
     }
 }
