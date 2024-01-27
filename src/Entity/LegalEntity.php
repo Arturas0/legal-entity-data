@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\LegalEntityRepository;
 use DateTimeImmutable;
@@ -28,7 +29,15 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(),
     ],
     normalizationContext: ['groups' => ['read']],
-)]
+),
+    ApiFilter(
+        searchFilter::class,
+        properties: [
+            'code' => SearchFilter::STRATEGY_START,
+            'name' => SearchFilter::STRATEGY_PARTIAL,
+        ]
+    )
+]
 class LegalEntity
 {
     #[ORM\Id]
