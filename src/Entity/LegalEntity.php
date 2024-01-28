@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
 use App\Repository\LegalEntityRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,15 +26,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(uriTemplate: '/legal-entities/{id}'),
         new GetCollection(uriTemplate: '/legal-entities'),
-        new Post(),
     ],
     normalizationContext: ['groups' => ['read']],
 ),
     ApiFilter(
         searchFilter::class,
         properties: [
-            'code' => SearchFilter::STRATEGY_START,
-            'name' => SearchFilter::STRATEGY_PARTIAL,
+            'code' => SearchFilterInterface::STRATEGY_START,
+            'name' => SearchFilterInterface::STRATEGY_PARTIAL,
+            'legalEntityStatus.code' => SearchFilterInterface::STRATEGY_EXACT,
         ]
     )
 ]
@@ -73,7 +73,7 @@ class LegalEntity
     #[ORM\ManyToOne(targetEntity: 'LegalEntityStatus'), Groups(['read'])]
     private ?LegalEntityStatus $legalEntityStatus = null;
 
-    #[ORM\Column(length: 255, unique: true), Groups(['read'])]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
     private ?string $checksum = null;
 
@@ -159,7 +159,7 @@ class LegalEntity
         return $this->checksum;
     }
 
-    public function setChecksum(?string $_= null): self
+    public function setChecksum(): self
     {
         $this->checksum = hash('xxh128', implode(',', [
             'code' => $this->code,
