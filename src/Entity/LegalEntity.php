@@ -46,7 +46,7 @@ class LegalEntity
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private Uuid $id;
 
-    #[ORM\Column(length: 255), Groups(['read'])]
+    #[ORM\Column(length: 255, unique: true), Groups(['read'])]
     #[Assert\NotBlank]
     #[ApiProperty(
         openapiContext: [
@@ -73,14 +73,20 @@ class LegalEntity
     #[ORM\ManyToOne(targetEntity: 'LegalEntityStatus'), Groups(['read'])]
     private ?LegalEntityStatus $legalEntityStatus = null;
 
+    #[ORM\Column(length: 255, unique: true), Groups(['read'])]
+    #[Assert\NotBlank]
+    private ?string $checksum = null;
+
     public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setCode(?string $code): void
+    public function setCode(?string $code): self
     {
         $this->code = $code;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -88,9 +94,11 @@ class LegalEntity
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getDisplayAddress(): ?string
@@ -98,9 +106,11 @@ class LegalEntity
         return $this->display_address;
     }
 
-    public function setDisplayAddress(?string $display_address): void
+    public function setDisplayAddress(?string $display_address): self
     {
         $this->display_address = $display_address;
+
+        return $this;
     }
 
     public function getRegisteredAt(): ?DateTimeImmutable
@@ -108,9 +118,11 @@ class LegalEntity
         return $this->registeredAt;
     }
 
-    public function setRegisteredAt(?DateTimeImmutable $registeredAt): void
+    public function setRegisteredAt(?DateTimeImmutable $registeredAt): self
     {
         $this->registeredAt = $registeredAt;
+
+        return $this;
     }
 
     public function getId(): Uuid
@@ -123,9 +135,11 @@ class LegalEntity
         return $this->legalEntityStatus;
     }
 
-    public function setLegalEntityStatus(?LegalEntityStatus $legalEntityStatus): void
+    public function setLegalEntityStatus(?LegalEntityStatus $legalEntityStatus): self
     {
         $this->legalEntityStatus = $legalEntityStatus;
+
+        return $this;
     }
 
     public function getLegalEntityType(): ?LegalEntityType
@@ -133,8 +147,28 @@ class LegalEntity
         return $this->legalEntityType;
     }
 
-    public function setLegalEntityType(?LegalEntityType $legalEntityType): void
+    public function setLegalEntityType(?LegalEntityType $legalEntityType): self
     {
         $this->legalEntityType = $legalEntityType;
+
+        return $this;
+    }
+
+    public function getChecksum(): ?string
+    {
+        return $this->checksum;
+    }
+
+    public function setChecksum(?string $_= null): self
+    {
+        $this->checksum = hash('xxh128', implode(',', [
+            'code' => $this->code,
+            'name' => $this->name,
+            'address' => $this->display_address,
+            'entity_type_code' => $this->legalEntityType?->getCode(),
+            'entity_status_code' => $this->legalEntityStatus?->getCode(),
+        ]));
+
+        return $this;
     }
 }
