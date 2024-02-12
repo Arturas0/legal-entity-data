@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\ImportLegalEntitiesService;
+use App\Service\ImportLegalEntityService;
 use League\Csv\Exception;
 use League\Csv\InvalidArgument;
 use League\Csv\Reader;
@@ -18,13 +18,16 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
     name: 'app:import-entity',
-    description: 'Imports entities from https://www.registrucentras.lt'
+    description: 'Imports entities from url (https://www.registrucentras.lt) or from local file'
 )]
 class ImportLegalEntityCommand extends Command
 {
     public function __construct(
         private readonly HttpClientInterface $client,
-        private readonly ImportLegalEntitiesService $legalEntitiesService,
+        private readonly ImportLegalEntityService $legalEntitiesService,
+        private readonly string $activeEntities,
+        private readonly string $inactiveEntities,
+        private readonly string $projectDir,
     ) {
         parent::__construct();
     }
@@ -35,19 +38,28 @@ class ImportLegalEntityCommand extends Command
         $io->title('Legal entities import');
 
         try {
-            $path = 'https://www.registrucentras.lt/aduomenys/?byla=JAR_IREGISTRUOTI.csv';
-            $output->writeln("Starting to download CSV file: $path");
+            $output->writeln("Starting to fetch active entities: $this->activeEntities");
+            $activeEntitiesCsv = $this->getCsvContentBySpecifier($this->activeEntities);
 
-            $csv = Reader::createFromString($this->client->request('GET', $path)->getContent());
+            $output->writeln("Starting to fetch inactive entities: $this->inactiveEntities".PHP_EOL);
+            $inactiveEntitiesCsv = $this->getCsvContentBySpecifier($this->inactiveEntities);
 
-            $output->writeln("File downloaded successfully. Processing...");
+            $output->writeln("Content fetched successfully. Processing...");
 
-            $this->legalEntitiesService->import($csv, $io, $path);
+            $this->legalEntitiesService->handleActiveEntities($activeEntitiesCsv, $io, $this->activeEntities);
+            $this->legalEntitiesService->handleInactiveEntities($inactiveEntitiesCsv, $io, $this->inactiveEntities);
         } catch (UnavailableStream|InvalidArgument|Exception $e) {
             $output->writeln($e->getMessage());
             return Command::FAILURE;
         }
 
         return Command::SUCCESS;
+    }
+
+    private function getCsvContentBySpecifier(string $path): Reader
+    {
+        return str_starts_with($path, 'http')
+            ? Reader::createFromString($this->client->request('GET', $path)->getContent())
+            : Reader::createFromPath($this->projectDir.'/import/'.$path);
     }
 }
