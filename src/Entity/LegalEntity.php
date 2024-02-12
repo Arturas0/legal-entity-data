@@ -68,6 +68,11 @@ class LegalEntity
     #[Assert\NotNull]
     public ?\DateTimeImmutable $registeredAt = null;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['read'])]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    #[Assert\NotNull]
+    public ?\DateTimeImmutable $deregisteredAt = null;
+
     #[ORM\ManyToOne(targetEntity: 'LegalEntityType'), Groups(['read'])]
     private ?LegalEntityType $legalEntityType = null;
     #[ORM\ManyToOne(targetEntity: 'LegalEntityStatus'), Groups(['read'])]
@@ -121,6 +126,18 @@ class LegalEntity
     public function setRegisteredAt(?DateTimeImmutable $registeredAt): self
     {
         $this->registeredAt = $registeredAt;
+
+        return $this;
+    }
+
+    public function getDeregisteredAt(): ?DateTimeImmutable
+    {
+        return $this->deregisteredAt;
+    }
+
+    public function setDeregisteredAt(?DateTimeImmutable $deregisteredAt): self
+    {
+        $this->deregisteredAt = $deregisteredAt;
 
         return $this;
     }

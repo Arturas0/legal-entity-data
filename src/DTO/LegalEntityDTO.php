@@ -15,6 +15,7 @@ readonly class LegalEntityDTO
         public ?DateTimeImmutable $registered_at,
         public ?int $legal_entity_type_code,
         public ?int $legal_entity_status_code,
+        public ?DateTimeImmutable $deregistered_at = null,
     ) {
     }
 }
