@@ -9,7 +9,7 @@
 /public/bundles/
 /var/
 /vendor/
-.phpunit.result.cache
+
 ###< symfony/framework-bundle ###
 
 # Created by https://www.toptal.com/developers/gitignore/api/symfony,phpstorm
@@ -21,6 +21,8 @@
 
 # User-specific stuff
 .idea/
+.phpunit.result.cache
+.phpunit.cache/
 
 # CMake
 cmake-build-*/
