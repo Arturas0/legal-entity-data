@@ -15,9 +15,6 @@ trait KernelTestTrait
 {
     public function getEntityManager(): EntityManagerInterface
     {
-        if (! $this instanceof KernelTestCase) {
-            throw new \Exception('KernelTestTrait can only be used in a KernelTestCase');
-        }
 
         /** @var EntityManagerInterface $em */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
