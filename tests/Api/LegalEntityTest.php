@@ -28,7 +28,7 @@ class LegalEntityTest extends ApiTestCase
 
          $this->assertResponseIsSuccessful();
 
-        $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count());
+        $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count([]));
     }
 
 
