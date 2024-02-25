@@ -1,5 +1,6 @@
 # https://help.github.com/en/actions
-name: Full CI process for Symfony 5
+name: Full CI process for Symfony 7.0
+
 on:
   push:
 jobs:
@@ -13,6 +14,7 @@ jobs:
         image: mysql:8.0.31
         env:
           MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: legal_entities
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -54,23 +56,23 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      # —— Symfony 🎵 ——————————————————————————————————————————————————————————
-      - name: Check Symfony requirements
-        run: vendor/bin/requirements-checker
-
-      - name: Check the Symfony console
-        run: |
-          bin/console about
-          bin/console strangebuzz:version
-
       ## —— Tests ✅ ———————————————————————————————————————————————————————————
-      # We use the dev env here
-      - name: Load Doctrine fixtures and indexes
+      - name: Create .env file
+        env:
+            DB_USER: root
+            DB_PASSWORD: root
         run: |
-          make load-fixtures
-          make populate
-
-      - name: Run functionnal and unit tests
+            touch .env
+            APP_SECRET=$(openssl rand -hex 32)
+          
+            echo APP_ENV=test >> .env
+            echo "APP_SECRET=${APP_SECRET}" >> .env
+          
+            echo DATABASE_URL="mysql://root:root@127.0.0.1:3306/legal-entities?serverVersion=8.0.31&charset=utf8mb4" >> .env
+            echo  CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$' >> .env
+      - name: Run functional and unit tests
         run: |
+          php bin/console doctrine:database:create
+          php bin/console doctrine:migrations:migrate -n
           cp phpunit.xml.ci phpunit.xml
-          make test-all
+          vendor/bin/phpunit
