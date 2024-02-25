@@ -89,6 +89,6 @@ class ImportLegalEntityTest extends KernelTestCase
         $this->assertStringContainsString('Inactive entity import done. Newly created records: 2', $output);
         $this->assertStringContainsString('Updated records: 1.', $output);
 
-        $this->assertEquals(5, $this->getEntityManager()->getRepository(LegalEntity::class)->count());
+        $this->assertEquals(5, $this->getEntityManager()->getRepository(LegalEntity::class)->count([]));
     }
 }

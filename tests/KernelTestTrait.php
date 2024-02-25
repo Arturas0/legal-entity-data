@@ -9,15 +9,11 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 trait KernelTestTrait
 {
     public function getEntityManager(): EntityManagerInterface
     {
-        if (! $this instanceof KernelTestCase) {
-            throw new \Exception('KernelTestTrait can only be used in a KernelTestCase');
-        }
 
         /** @var EntityManagerInterface $em */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
