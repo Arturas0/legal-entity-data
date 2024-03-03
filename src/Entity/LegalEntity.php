@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\Filter\ActiveLegalEntityFilter;
 use App\Repository\LegalEntityRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -71,6 +72,7 @@ class LegalEntity
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['read'])]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     #[Assert\NotNull]
+    #[ApiFilter(ActiveLegalEntityFilter::class)]
     public ?\DateTimeImmutable $deregisteredAt = null;
 
     #[ORM\ManyToOne(targetEntity: 'LegalEntityType'), Groups(['read'])]
