@@ -16,8 +16,7 @@ class LegalEntityFixtures extends Fixture
 {
     public function __construct(
         protected EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     public function load(ObjectManager $manager): void
