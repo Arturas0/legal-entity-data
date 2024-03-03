@@ -75,6 +75,7 @@ class ImportLegalEntityTest extends KernelTestCase
 
         return $csvContent;
     }
+
     public function testCanImportActiveAndInactiveEntitiesFromUrl(): void
     {
         $this->loadFixtures([

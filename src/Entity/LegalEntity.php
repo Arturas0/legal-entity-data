@@ -51,7 +51,7 @@ class LegalEntity
     #[Assert\NotBlank]
     #[ApiProperty(
         openapiContext: [
-            'example' => '300020079'
+            'example' => '300020079',
         ]
     )]
     private ?string $code = null;

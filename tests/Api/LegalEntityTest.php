@@ -10,7 +10,6 @@ use App\DataFixtures\LegalEntityStatusFixtures;
 use App\DataFixtures\LegalEntityTypeFixtures;
 use App\Entity\LegalEntity;
 use App\Tests\KernelTestTrait;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 class LegalEntityTest extends ApiTestCase
 {
@@ -24,12 +23,10 @@ class LegalEntityTest extends ApiTestCase
             new LegalEntityFixtures($this->getEntityManager()),
         ]);
 
-         $this->createClient()->request('GET', 'api/legal-entities');
+        $this->createClient()->request('GET', 'api/legal-entities');
 
-         $this->assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
 
         $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count([]));
     }
-
-
 }

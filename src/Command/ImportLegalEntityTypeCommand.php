@@ -72,6 +72,7 @@ class ImportLegalEntityTypeCommand extends Command
             $io->success("Entity types import done. $message");
         } catch (UnavailableStream|InvalidArgument|Exception $e) {
             $output->writeln($e->getMessage());
+
             return Command::FAILURE;
         }
 

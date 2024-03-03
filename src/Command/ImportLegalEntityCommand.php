@@ -50,6 +50,7 @@ class ImportLegalEntityCommand extends Command
             $this->legalEntitiesService->handleInactiveEntities($inactiveEntitiesCsv, $io, $this->inactiveEntities);
         } catch (UnavailableStream|InvalidArgument|Exception $e) {
             $output->writeln($e->getMessage());
+
             return Command::FAILURE;
         }
 

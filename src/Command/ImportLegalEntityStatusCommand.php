@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\LegalEntityStatus;
-use App\Entity\LegalEntityType;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Exception;
 use League\Csv\InvalidArgument;
@@ -73,6 +72,7 @@ class ImportLegalEntityStatusCommand extends Command
             $io->success("Entity status import done. $message");
         } catch (UnavailableStream|InvalidArgument|Exception $e) {
             $output->writeln($e->getMessage());
+
             return Command::FAILURE;
         }
 
