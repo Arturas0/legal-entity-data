@@ -29,4 +29,19 @@ class LegalEntityTest extends ApiTestCase
 
         $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count([]));
     }
+
+    public function test_can_filter_legal_entity_by_active_or_not(): void
+    {
+        $this->loadFixtures([
+            new LegalEntityTypeFixtures(),
+            new LegalEntityStatusFixtures(),
+            new LegalEntityFixtures($this->getEntityManager()),
+        ]);
+
+        $this->createClient()->request('GET', 'api/legal-entities?active=true');
+
+        $this->assertResponseIsSuccessful();
+
+        $this->assertEquals(2, count($this->getEntityManager()->getRepository(LegalEntity::class)->getActive()));
+    }
 }

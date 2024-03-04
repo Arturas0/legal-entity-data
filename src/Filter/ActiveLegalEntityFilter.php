@@ -20,7 +20,7 @@ class ActiveLegalEntityFilter extends AbstractFilter
         ?Operation $operation = null,
         array $context = [],
     ): void {
-        if ($property !== 'is_active') {
+        if ($property !== 'active') {
             return;
         }
 
@@ -36,8 +36,12 @@ class ActiveLegalEntityFilter extends AbstractFilter
 
     public function getDescription(string $resourceClass): array
     {
+        if (! $this->properties) {
+            return [];
+        }
+
         return [
-            'is_active' => [
+            'active' => [
                 'property' => null,
                 'type' => 'bool',
                 'required' => false,

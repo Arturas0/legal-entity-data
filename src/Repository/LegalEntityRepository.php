@@ -36,13 +36,12 @@ class LegalEntityRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?LegalEntity
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getActive(): array
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.deregisteredAt IS NULL')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
