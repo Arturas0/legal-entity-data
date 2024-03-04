@@ -27,6 +27,7 @@ class LegalEntityFixtures extends Fixture
                 'ja_pavadinimas' => 'Bendra Lietuvos-Rusijos įmonė "PETRONIKA"',
                 'adresas' => 'Vilnius, Salomėjos Nėries g. 29-56, LT-06312',
                 'ja_reg_data' => '1991-06-13',
+                'isreg_data' => '2024-02-28',
                 'form_kodas' => '310',
                 'form_pavadinimas' => 'Uždaroji akcinė bendrovė',
                 'stat_kodas' => '9',
@@ -39,6 +40,7 @@ class LegalEntityFixtures extends Fixture
                 'ja_pavadinimas' => 'Viešosios įstaigos "Palaimos židinys" filialas',
                 'adresas' => 'Jonavos r. sav., Rukla, Rupeikio g. 7-37, LT-55289',
                 'ja_reg_data' => '2007-01-31',
+                'isreg_data' => null,
                 'form_kodas' => '571',
                 'form_pavadinimas' => 'Viešosios įstaigos filialas',
                 'stat_kodas' => '0',
@@ -51,6 +53,7 @@ class LegalEntityFixtures extends Fixture
                 'ja_pavadinimas' => 'UAB "Kauno buitinė chemija"',
                 'adresas' => 'Kaunas, Savanorių pr. 339A, LT-50119',
                 'ja_reg_data' => '2007-02-05',
+                'isreg_data' => null,
                 'form_kodas' => '310',
                 'form_pavadinimas' => 'Uždaroji akcinė bendrovė',
                 'stat_kodas' => '1',
@@ -63,11 +66,16 @@ class LegalEntityFixtures extends Fixture
         foreach ($arrayLegalEntities as $arrayLegal) {
             $legalEntity = new LegalEntity();
 
+            $deregistrationDate = $arrayLegal['isreg_data']
+                ? DateTimeImmutable::createFromFormat('Y-m-d', $arrayLegal['isreg_data'])
+                : null;
+
             $legalEntity
                 ->setCode($arrayLegal['ja_kodas'])
                 ->setName($arrayLegal['ja_pavadinimas'])
                 ->setDisplayAddress($arrayLegal['adresas'])
                 ->setRegisteredAt(DateTimeImmutable::createFromFormat('Y-m-d', $arrayLegal['ja_reg_data']))
+                ->setDeregisteredAt($deregistrationDate)
                 ->setLegalEntityType($this->getEntityType((int)$arrayLegal['form_kodas']))
                 ->setLegalEntityStatus($this->getEntityStatus((int)$arrayLegal['stat_kodas']))
                 ->setChecksum();
