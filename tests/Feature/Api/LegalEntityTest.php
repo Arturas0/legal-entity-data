@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Api;
+namespace App\Tests\Feature\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\DataFixtures\LegalEntityFixtures;
@@ -27,7 +27,7 @@ class LegalEntityTest extends ApiTestCase
 
         $this->assertResponseIsSuccessful();
 
-        $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count([]));
+        $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count());
     }
 
     public function test_can_filter_legal_entity_by_active_or_not(): void

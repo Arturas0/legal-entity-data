@@ -77,6 +77,7 @@ class LegalEntity
 
     #[ORM\ManyToOne(targetEntity: 'LegalEntityType'), Groups(['read'])]
     private ?LegalEntityType $legalEntityType = null;
+
     #[ORM\ManyToOne(targetEntity: 'LegalEntityStatus'), Groups(['read'])]
     private ?LegalEntityStatus $legalEntityStatus = null;
 
