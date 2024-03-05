@@ -45,7 +45,7 @@ class ActiveLegalEntityFilter extends AbstractFilter
                 'property' => null,
                 'type' => 'bool',
                 'required' => false,
-                'swagger' => [
+                'openai' => [
                     'description' => 'Filter active or inactive legal entities.',
                     'name' => 'Active legal entities',
                 ],
