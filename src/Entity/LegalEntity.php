@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         searchFilter::class,
         properties: [
             'code' => SearchFilterInterface::STRATEGY_START,
-            'name' => SearchFilterInterface::STRATEGY_IWORD_START,
+            'name' => SearchFilterInterface::STRATEGY_IPARTIAL,
             'legalEntityStatus.code' => SearchFilterInterface::STRATEGY_EXACT,
         ]
     )
