@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+{% block stylesheets %}
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper">
+        <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% endif %}
+
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" placeholder="Email" autocomplete="email" required autofocus>
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input type="password" name="password" id="inputPassword" placeholder="Password" autocomplete="current-password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}">
+
+           <div class="remember-forget">
+               <label><input type="checkbox" name="_remember_me">Remember me</label>
+               <a href="{{ path('app_forgot_password_request') }}">Forgot password</a>
+           </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="register-link">
+                <p>Don't have an account? <a href="{{ path('app_register') }}">Register</a></p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
