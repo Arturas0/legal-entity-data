@@ -237,7 +237,7 @@ class ImportLegalEntityService
             ]);
     }
 
-    private function printImportResultMessage(SymfonyStyle $io, bool $proccessingActiveEntities): void
+    private function printImportResultMessage(SymfonyStyle $io, bool $processingActiveEntities): void
     {
         $message = '';
 
@@ -255,7 +255,7 @@ class ImportLegalEntityService
 
         $message = $message ?: 'No entry created or updated.';
 
-        $proccessingActiveEntities
+        $processingActiveEntities
             ? $io->success("Active entity import done. $message")
             : $io->success("Inactive entity import done. $message");
     }
