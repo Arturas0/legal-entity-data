@@ -16,7 +16,6 @@ jobs:
                 options: --health-cmd="mysqladmin ping" --health-interval=10s
 
         env:
-            # Connection string for the GitHub runner to find the MySQL service
             DATABASE_URL: "mysql://root@127.0.0.1:3306/legal_entities?serverVersion=8.0"
 
         steps:
