@@ -10,7 +10,7 @@ jobs:
                 image: mysql:8.0
                 env:
                     MYSQL_ALLOW_EMPTY_PASSWORD: yes
-                    MYSQL_DATABASE: legal_entities
+                    MYSQL_DATABASE: legal_entities_test
                 ports:
                     - 3306:3306
                 options: --health-cmd="mysqladmin ping" --health-interval=10s
