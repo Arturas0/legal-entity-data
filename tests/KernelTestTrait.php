@@ -21,7 +21,7 @@ trait KernelTestTrait
         return $em;
     }
 
-    /** @var Fixture[] */
+    /** @var $fixtures Fixture[] */
     protected function loadFixtures(array $fixtures): void
     {
         $loader = new Loader();

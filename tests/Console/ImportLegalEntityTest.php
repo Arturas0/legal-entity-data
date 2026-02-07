@@ -60,7 +60,7 @@ class ImportLegalEntityTest extends KernelTestCase
         );
 
         $application = new Application(self::$kernel);
-        $application->add($command);
+        $application->addCommand($command);
 
         $this->commandTester = new CommandTester($command);
     }

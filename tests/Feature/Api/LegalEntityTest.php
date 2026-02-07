@@ -15,6 +15,8 @@ class LegalEntityTest extends ApiTestCase
 {
     use KernelTestTrait;
 
+    protected static ?bool $alwaysBootKernel = true;
+
     public function testGetLegalEntityCollection(): void
     {
         $this->loadFixtures([
