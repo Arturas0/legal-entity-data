@@ -153,3 +153,7 @@ fabric.properties
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 ###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/.phpunit.cache/
+###< phpunit/phpunit ###
