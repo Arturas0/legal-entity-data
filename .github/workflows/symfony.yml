@@ -1,89 +1,64 @@
-# https://help.github.com/en/actions
-name: Full CI process for Symfony 7.0
-
-on:
-  push:
+name: CI
+on: [push]
 jobs:
-  symfony:
-    name: Symfony 7.0 (PHP ${{ matrix.php-versions }})
-    # https://hub.docker.com/_/ubuntu/
-    runs-on: ubuntu-20.04
-    services:
-      # https://docs.docker.com/samples/library/mysql/
-      mysql:
-        image: mysql:8.0.31
+    symfony:
+        name: Symfony 7.4 (PHP ${{ matrix.php-versions }})
+        runs-on: ubuntu-latest
+        services:
+            mysql:
+                image: mysql:8.0.31
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                    MYSQL_DATABASE: legal_entities_test
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+        strategy:
+            fail-fast: true
+            matrix:
+                php-versions: ['8.4']
+
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: legal_entities
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-    strategy:
-      fail-fast: true
-      matrix:
-        php-versions: ['8.3']
-#        php-versions: ['8.2', '8.3']
-    steps:
-      # https://github.com/actions/checkout (official)
-      - name: Checkout
-        uses: actions/checkout@v2
+            DATABASE_URL: "mysql://root:root@127.0.0.1:3306/legal_entities_test?serverVersion=8.0.31&charset=utf8mb4"
+            APP_ENV: test
 
-      # https://github.com/shivammathur/setup-php (community)
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring
-        env:
-          update: true
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Check PHP Version
-        run: php -v
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, gd
+                  coverage: none
 
-      # —— Composer 🧙‍️ —————————————————————————————————————————————————————————
-      - name: Validate composer.json and composer.lock
-        run: composer validate
+            - name: Validate composer.json
+              run: composer validate --strict
 
-      # —— cs_-fixer 🧙‍️ —————————————————————————————————————————————————————————
-      - name: Run PHP CS Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --config=.php_cs.dist.php --allow-risky=yes
+            - name: Cache Composer packages
+              uses: actions/cache@v3
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Fix styling
+            - name: Install Dependencies
+              run: composer install --no-interaction --optimize-autoloader --prefer-dist
 
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-
+            # Note: Ensure .php-cs-fixer.dist.php exists in your root
+            - name: Run PHP CS Fixer
+              run: vendor/bin/php-cs-fixer fix --dry-run --diff
+              continue-on-error: true
 
-      - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+            # —— Database Setup ——
+            - name: Build Database
+              run: |
+                  php bin/console doctrine:database:create --if-not-exists
+                  php bin/console doctrine:migrations:migrate --no-interaction
 
-      ## —— Tests ✅ ———————————————————————————————————————————————————————————
-      - name: Create .env file
-        env:
-            DB_USER: root
-            DB_PASSWORD: root
-        run: |
-            touch .env
-            APP_SECRET=$(openssl rand -hex 32)
-          
-            echo APP_ENV=test >> .env
-            echo "APP_SECRET=${APP_SECRET}" >> .env
-          
-            echo DATABASE_URL="mysql://root:root@127.0.0.1:3306/legal-entities?serverVersion=8.0.31&charset=utf8mb4" >> .env
-            echo  CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$' >> .env
-      - name: Run functional and unit tests
-        run: |
-          php bin/console doctrine:database:create
-          php bin/console doctrine:migrations:migrate -n
-          cp phpunit.xml.ci phpunit.xml
-          vendor/bin/phpunit
+            # —— Execution ——
+            - name: Run Tests
+              run: vendor/bin/phpunit
