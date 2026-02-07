@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-    tests:
+    test:
         runs-on: ubuntu-latest
         services:
             mysql:
@@ -20,7 +20,6 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -28,7 +27,7 @@ jobs:
                   extensions: pdo_mysql, mbstring, xml
 
             - name: Install
-              run: composer install --no-interaction
+              run: composer install --no-interaction --optimize-autoloader
 
             - name: Build Database
               run: |
