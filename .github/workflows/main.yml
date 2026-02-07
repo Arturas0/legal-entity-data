@@ -10,14 +10,14 @@ jobs:
                 image: mysql:8.0
                 env:
                     MYSQL_ALLOW_EMPTY_PASSWORD: yes
-                    MYSQL_DATABASE: legal_entity_data_test
+                    MYSQL_DATABASE: legal_entities
                 ports:
                     - 3306:3306
                 options: --health-cmd="mysqladmin ping" --health-interval=10s
 
         env:
             # Connection string for the GitHub runner to find the MySQL service
-            DATABASE_URL: "mysql://root@127.0.0.1:3306/test_db?serverVersion=8.0"
+            DATABASE_URL: "mysql://root@127.0.0.1:3306/legal_entities?serverVersion=8.0"
 
         steps:
             - uses: actions/checkout@v4
