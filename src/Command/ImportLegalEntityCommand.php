@@ -60,7 +60,7 @@ class ImportLegalEntityCommand extends Command
     private function getCsvContentBySpecifier(string $path): Reader
     {
         return str_starts_with($path, 'http')
-            ? Reader::createFromString($this->client->request('GET', $path)->getContent())
-            : Reader::createFromPath($this->projectDir.'/import/'.$path);
+            ? Reader::fromString($this->client->request('GET', $path)->getContent())
+            : Reader::from($this->projectDir.'/import/'.$path);
     }
 }
