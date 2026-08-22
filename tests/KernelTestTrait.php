@@ -14,14 +14,13 @@ trait KernelTestTrait
 {
     public function getEntityManager(): EntityManagerInterface
     {
-
         /** @var EntityManagerInterface $em */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         return $em;
     }
 
-    /** @var $fixtures Fixture[] */
+    /** @var Fixture[] */
     protected function loadFixtures(array $fixtures): void
     {
         $loader = new Loader();

@@ -31,14 +31,13 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['read']],
 ),
     ApiFilter(
-        searchFilter::class,
+        SearchFilter::class,
         properties: [
             'code' => SearchFilterInterface::STRATEGY_START,
             'name' => SearchFilterInterface::STRATEGY_IPARTIAL,
             'legalEntityStatus.code' => SearchFilterInterface::STRATEGY_EXACT,
         ]
-    )
-]
+    )]
 class LegalEntity
 {
     #[ORM\Id]
@@ -67,13 +66,13 @@ class LegalEntity
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['read'])]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     #[Assert\NotNull]
-    public ?\DateTimeImmutable $registeredAt = null;
+    public ?DateTimeImmutable $registeredAt = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['read'])]
     #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
     #[Assert\NotNull]
     #[ApiFilter(ActiveLegalEntityFilter::class)]
-    public ?\DateTimeImmutable $deregisteredAt = null;
+    public ?DateTimeImmutable $deregisteredAt = null;
 
     #[ORM\ManyToOne(targetEntity: 'LegalEntityType'), Groups(['read'])]
     private ?LegalEntityType $legalEntityType = null;

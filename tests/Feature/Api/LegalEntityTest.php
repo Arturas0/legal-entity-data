@@ -32,7 +32,7 @@ class LegalEntityTest extends ApiTestCase
         $this->assertEquals(3, $this->getEntityManager()->getRepository(LegalEntity::class)->count());
     }
 
-    public function test_can_filter_legal_entity_by_active_or_not(): void
+    public function testCanFilterLegalEntityByActiveOrNot(): void
     {
         $this->loadFixtures([
             new LegalEntityTypeFixtures(),

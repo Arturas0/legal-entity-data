@@ -13,9 +13,9 @@ class LegalEntityTypeFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $arrayLegalEntityTypes = [
-                ['code' => 310, 'short_name' => 'Uždaroji akcinė bendrovė', 'long_name' => 'Uždaroji akcinė bendrovė', 'type' => 'Privatus'],
-                ['code' => 320, 'short_name' => 'Akcinė bendrovė', 'long_name' => 'Akcinė bendrovė', 'type' => 'Privatus'],
-                ['code' => 571, 'short_name' => 'Viešosios įstaigos filialas', 'long_name' => 'Viešosios įstaigos filialas', 'type' => 'Viešasis'],
+            ['code' => 310, 'short_name' => 'Uždaroji akcinė bendrovė', 'long_name' => 'Uždaroji akcinė bendrovė', 'type' => 'Privatus'],
+            ['code' => 320, 'short_name' => 'Akcinė bendrovė', 'long_name' => 'Akcinė bendrovė', 'type' => 'Privatus'],
+            ['code' => 571, 'short_name' => 'Viešosios įstaigos filialas', 'long_name' => 'Viešosios įstaigos filialas', 'type' => 'Viešasis'],
         ];
 
         foreach ($arrayLegalEntityTypes as $arrayLegalStatus) {
