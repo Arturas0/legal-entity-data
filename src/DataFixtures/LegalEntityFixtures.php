@@ -76,8 +76,8 @@ class LegalEntityFixtures extends Fixture
                 ->setDisplayAddress($arrayLegal['adresas'])
                 ->setRegisteredAt(DateTimeImmutable::createFromFormat('Y-m-d', $arrayLegal['ja_reg_data']))
                 ->setDeregisteredAt($deregistrationDate)
-                ->setLegalEntityType($this->getEntityType((int)$arrayLegal['form_kodas']))
-                ->setLegalEntityStatus($this->getEntityStatus((int)$arrayLegal['stat_kodas']))
+                ->setLegalEntityType($this->getEntityType((int) $arrayLegal['form_kodas']))
+                ->setLegalEntityStatus($this->getEntityStatus((int) $arrayLegal['stat_kodas']))
                 ->setChecksum();
 
             $manager->persist($legalEntity);

@@ -106,7 +106,7 @@ class ImportLegalEntityService
 
         $this->printImportResultMessage($io, true);
         $this->stopwatch->stop($section);
-        $io->writeln((string)$this->stopwatch->getEvent($section));
+        $io->writeln((string) $this->stopwatch->getEvent($section));
     }
 
     public function handleInactiveEntities(Reader $csv, SymfonyStyle $io, string $path): void
@@ -186,7 +186,7 @@ class ImportLegalEntityService
 
         $this->printImportResultMessage($io, false);
         $this->stopwatch->stop($section);
-        $io->writeln((string)$this->stopwatch->getEvent($section));
+        $io->writeln((string) $this->stopwatch->getEvent($section));
     }
 
     private function createLegalEntity(LegalEntityDTO $legalEntityDTO): void

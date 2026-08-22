@@ -41,10 +41,10 @@ class ImportLegalEntityCommand extends Command
             $output->writeln("Starting to fetch active entities: $this->activeEntities");
             $activeEntitiesCsv = $this->getCsvContentBySpecifier($this->activeEntities);
 
-            $output->writeln("Starting to fetch inactive entities: $this->inactiveEntities".PHP_EOL);
+            $output->writeln("Starting to fetch inactive entities: $this->inactiveEntities" . PHP_EOL);
             $inactiveEntitiesCsv = $this->getCsvContentBySpecifier($this->inactiveEntities);
 
-            $output->writeln("Content fetched successfully. Processing...");
+            $output->writeln('Content fetched successfully. Processing...');
 
             $this->legalEntitiesService->handleActiveEntities($activeEntitiesCsv, $io, $this->activeEntities);
             $this->legalEntitiesService->handleInactiveEntities($inactiveEntitiesCsv, $io, $this->inactiveEntities);
@@ -61,6 +61,6 @@ class ImportLegalEntityCommand extends Command
     {
         return str_starts_with($path, 'http')
             ? Reader::fromString($this->client->request('GET', $path)->getContent())
-            : Reader::from($this->projectDir.'/import/'.$path);
+            : Reader::from($this->projectDir . '/import/' . $path);
     }
 }
